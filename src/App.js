@@ -1,17 +1,28 @@
 import { useState } from 'react';
-import BockCreate from './components/BookCreat';
+import BookCreate from './components/BookCreat';
 import BookList from './components/BookList';
 function App() {
   const [books, setBooks] = useState([]);
 
-  const deletBookById = id => {
+  const editBookById = (id, newTitle) => {
+    const updatedBooks = books.map(book => {
+      if (book.id === id) {
+        return { ...book, title: newTitle };
+      }
+
+      return book;
+    });
+    setBooks(updatedBooks);
+  };
+
+  const deleteBookById = id => {
     const updatedBooks = books.filter(book => {
       return book.id !== id;
     });
     setBooks(updatedBooks);
   };
 
-  const creatBoock = title => {
+  const createBook = title => {
     const updatedBooks = [
       ...books,
       { id: Math.round(Math.random() * 9999), title },
@@ -21,8 +32,9 @@ function App() {
 
   return (
     <div className="app">
-      <BookList books={books} onDelete={deletBookById} />
-      <BockCreate onCreat={creatBoock} />
+      <h1>Reading List</h1>
+      <BookList onEdit={editBookById} books={books} onDelete={deleteBookById} />
+      <BookCreate onCreat={createBook} />
     </div>
   );
 }
